@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldAlert, ShieldCheck, AlertTriangle, Fingerprint } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, AlertTriangle, Fingerprint, FileDown, Copy, CheckCircle2, Link, Phone, CreditCard } from 'lucide-react';
 import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import Shield3D from '../components/Shield3D';
@@ -13,12 +14,32 @@ interface ScanResult {
   explain: string;
   reasons: string[];
   actions: string[];
+  iocs?: {
+    urls: string[];
+    phone_numbers: string[];
+    upi_ids: string[];
+  };
+  risk_metrics?: {
+    urgency_level: string;
+    financial_threat: string;
+    coercion_level: string;
+    credential_harvest: string;
+  };
 }
 
 export default function Scanner({ language, t }: { language: string, t: any }) {
   const [text, setText] = useState('');
   const [result, setResult] = useState<ScanResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [copiedDossier, setCopiedDossier] = useState(false);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state && (location.state as any).prefill) {
+      setText((location.state as any).prefill);
+    }
+  }, [location.state]);
 
   const handleScan = async () => {
     if (!text.trim()) return;
@@ -50,6 +71,61 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
     return <ShieldCheck size={64} color="var(--safe)" />;
   };
 
+  // Generate formal cybercrime complaint dossier
+  const generateDossierText = () => {
+    if (!result) return '';
+    const now = new Date().toISOString();
+    return `================================================================================
+KAVACH CYBER DEFENSE - FORENSIC INCIDENT & COMPLAINT DOSSIER
+Generated Timestamp: ${now}
+Report Classification: CONFIDENTIAL / EVIDENCE GRADE
+================================================================================
+
+1. INCIDENT CLASSIFICATION & THREAT ASSESSMENT:
+- Threat Verdict: ${result.verdict.toUpperCase()} (Threat Severity Score: ${result.score}/100)
+- Attack Vector Category: ${result.type || 'Social Engineering / Digital Fraud'}
+- Urgency Rating: ${result.risk_metrics?.urgency_level || 'N/A'}
+- Financial Coercion Risk: ${result.risk_metrics?.financial_threat || 'N/A'}
+- Statutory Violations: Information Technology Act 2000 (Section 66D: Cheating by Personation), IPC Section 420 (Cheating and Dishonesty)
+
+2. EXTRACTED INDICATORS OF COMPROMISE (IoCs):
+- Suspect Phone Numbers / Senders: ${result.iocs?.phone_numbers?.length ? result.iocs.phone_numbers.join(', ') : 'None extracted'}
+- Malicious / Phishing URLs: ${result.iocs?.urls?.length ? result.iocs.urls.join(', ') : 'None extracted'}
+- Suspect UPI Payment Addresses: ${result.iocs?.upi_ids?.length ? result.iocs.upi_ids.join(', ') : 'None extracted'}
+
+3. ORIGINAL EVIDENTIARY TEXT ARTIFACT:
+"""
+${text}
+"""
+
+4. SYSTEM FORENSIC FINDINGS:
+${result.reasons.map((r, i) => `${i + 1}. ${r}`).join('\n')}
+
+5. RECOMMENDED LAW ENFORCEMENT & REMEDIATION ACTIONS:
+${result.actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}
+
+================================================================================
+For filing online, submit this dossier directly to: https://cybercrime.gov.in
+Helpline: National Cyber Crime Helpline (1930)
+================================================================================`;
+  };
+
+  const handleCopyDossier = () => {
+    navigator.clipboard.writeText(generateDossierText());
+    setCopiedDossier(true);
+    setTimeout(() => setCopiedDossier(false), 2500);
+  };
+
+  const handleDownloadDossier = () => {
+    const blob = new Blob([generateDossierText()], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `kavach_threat_dossier_${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -59,7 +135,7 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
       <div className="glass-card">
         
         {/* 3D Visualizer */}
-        <div style={{ height: '200px', width: '100%', marginBottom: '1.5rem', borderRadius: '16px', overflow: 'hidden', background: 'rgba(0,0,0,0.2)' }}>
+        <div style={{ height: '180px', width: '100%', marginBottom: '1.5rem', borderRadius: '16px', overflow: 'hidden', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <Canvas camera={{ position: [0, 0, 5] }}>
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 10]} intensity={1} />
@@ -74,7 +150,7 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
           onChange={(e) => setText(e.target.value)}
           style={{ backgroundColor: '#000000', color: '#ffffff' }}
         />
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
           <button className="btn btn-secondary" onClick={() => setText('')}>
             {t.clearInput}
           </button>
@@ -116,7 +192,7 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
               boxShadow: `0 8px 32px color-mix(in srgb, ${getVerdictColor(result.verdict)} 10%, transparent)`
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '2rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '2rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
               <motion.div 
                 initial={{ scale: 0 }} 
                 animate={{ scale: 1 }} 
@@ -128,13 +204,75 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
                 <h2 style={{ fontSize: '2rem', fontWeight: 700, textTransform: 'capitalize', color: getVerdictColor(result.verdict), marginBottom: '0.25rem' }}>
                   {result.verdict === 'scam' ? t.criticalThreat : result.verdict}
                 </h2>
-                <div style={{ display: 'flex', gap: '1rem', color: '#ffffff' }}>
+                <div style={{ display: 'flex', gap: '1rem', color: '#ffffff', flexWrap: 'wrap' }}>
                   <span>{t.severityScore}: <strong style={{ color: '#ffffff' }}>{result.score}/100</strong></span>
                   <span>&bull;</span>
                   <span>{t.vector}: <strong style={{ color: '#ffffff' }}>{result.type || 'Generic Text'}</strong></span>
                 </div>
               </div>
             </div>
+
+            {/* Multi-Dimensional Threat Vectors */}
+            {result.risk_metrics && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '0.75rem', marginBottom: '2rem' }}>
+                <div style={{ background: '#000000', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '0.75rem 1rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Urgency Level</span>
+                  <p style={{ fontWeight: 600, color: result.risk_metrics.urgency_level === 'High' ? 'var(--suspicious)' : 'var(--safe)' }}>
+                    {result.risk_metrics.urgency_level}
+                  </p>
+                </div>
+                <div style={{ background: '#000000', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '0.75rem 1rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Financial Threat</span>
+                  <p style={{ fontWeight: 600, color: result.risk_metrics.financial_threat === 'Critical' ? 'var(--scam)' : (result.risk_metrics.financial_threat === 'Medium' ? 'var(--suspicious)' : 'var(--safe)') }}>
+                    {result.risk_metrics.financial_threat}
+                  </p>
+                </div>
+                <div style={{ background: '#000000', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '0.75rem 1rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Coercion Level</span>
+                  <p style={{ fontWeight: 600, color: result.risk_metrics.coercion_level === 'Severe' ? 'var(--scam)' : 'var(--safe)' }}>
+                    {result.risk_metrics.coercion_level}
+                  </p>
+                </div>
+                <div style={{ background: '#000000', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '12px', padding: '0.75rem 1rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Credential Harvesting</span>
+                  <p style={{ fontWeight: 600, color: result.risk_metrics.credential_harvest === 'Detected' ? 'var(--scam)' : 'var(--safe)' }}>
+                    {result.risk_metrics.credential_harvest}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Extracted Indicators of Compromise (IoCs) */}
+            {result.iocs && (result.iocs.phone_numbers.length > 0 || result.iocs.urls.length > 0 || result.iocs.upi_ids.length > 0) && (
+              <div style={{ background: '#000000', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '14px', padding: '1.25rem', marginBottom: '2rem' }}>
+                <h3 style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.75rem' }}>
+                  Extracted Indicators of Compromise (IoCs)
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {result.iocs.phone_numbers.map((phone, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
+                      <Phone size={15} color="var(--scam)" />
+                      <span style={{ color: 'var(--text-muted)' }}>Suspect Phone:</span>
+                      <strong style={{ fontFamily: 'monospace', color: '#ffffff' }}>{phone}</strong>
+                    </div>
+                  ))}
+                  {result.iocs.urls.map((u, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
+                      <Link size={15} color="var(--suspicious)" />
+                      <span style={{ color: 'var(--text-muted)' }}>Flagged Link:</span>
+                      <strong style={{ fontFamily: 'monospace', color: '#ffffff' }}>{u}</strong>
+                    </div>
+                  ))}
+                  {result.iocs.upi_ids.map((upi, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem' }}>
+                      <CreditCard size={15} color="var(--scam)" />
+                      <span style={{ color: 'var(--text-muted)' }}>Suspect Payment VPA:</span>
+                      <strong style={{ fontFamily: 'monospace', color: '#ffffff' }}>{upi}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {result.explain && (
               <motion.div 
@@ -158,7 +296,7 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
               </motion.div>
             )}
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
               {result.reasons.length > 0 && (
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
                   <h3 style={{ color: 'var(--text-muted)', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem' }}>{t.detectionFactors}</h3>
@@ -183,6 +321,24 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
                 </ul>
               </motion.div>
             </div>
+
+            {/* Legal Cybercrime Evidence Dossier Export */}
+            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>Legal Cybercrime Dossier</h4>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Generate formal evidence complaint formatted for cybercrime.gov.in / Police reporting.</p>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <button className="btn btn-secondary" onClick={handleCopyDossier} style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                  {copiedDossier ? <CheckCircle2 size={16} color="var(--safe)" /> : <Copy size={16} />}
+                  {copiedDossier ? 'Dossier Copied' : 'Copy Dossier'}
+                </button>
+                <button className="btn btn-primary" onClick={handleDownloadDossier} style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                  <FileDown size={16} /> Download .TXT Report
+                </button>
+              </div>
+            </div>
+
           </motion.div>
         )}
       </AnimatePresence>

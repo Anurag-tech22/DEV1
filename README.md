@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ KAVACH (कवच) v2.0
+# 🛡️ KAVACH (कवच)
 ### Next-Gen Autonomous Cyber Defense & Scam Intelligence Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)

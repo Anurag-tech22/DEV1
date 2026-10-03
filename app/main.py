@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-from .rules import scan, ACTIONS
+from .rules import scan, ACTIONS, inspect_url, inspect_upi
 from .ai_engine import ai_engine
 
 # Configure basic logging
@@ -64,7 +64,7 @@ def get_db_connection() -> sqlite3.Connection:
     return conn
 
 # FastAPI Application
-app = FastAPI(title="OmniGuard API")
+app = FastAPI(title="Kavach Cyber Defense Platform")
 
 # Pydantic Models
 class ScanRequest(BaseModel):
@@ -76,6 +76,12 @@ class DrillRequest(BaseModel):
     step: int = Field(default=0, ge=0, le=5)
     reply: str = Field(default="", max_length=1000)
 
+class UrlInspectRequest(BaseModel):
+    url: str = Field(..., max_length=2000)
+
+class UpiInspectRequest(BaseModel):
+    query: str = Field(..., max_length=1000)
+
 class ScanResponse(BaseModel):
     verdict: str
     score: int
@@ -84,6 +90,9 @@ class ScanResponse(BaseModel):
     actions: List[str]
     explain: Optional[str]
     llm: bool
+    iocs: Optional[Dict[str, Any]] = None
+    url_analysis: Optional[List[Dict[str, Any]]] = None
+    risk_metrics: Optional[Dict[str, Any]] = None
 
 # Drill Scenarios
 DRILLS = {
@@ -219,6 +228,70 @@ def api_drill(request: DrillRequest) -> Dict[str, Any]:
     )
     
     return {"done": True, "passed": passed, "debrief": debrief}
+
+
+@app.post("/api/url-inspect")
+def api_url_inspect(request: UrlInspectRequest) -> Dict[str, Any]:
+    """Deep analysis of a URL for phishing, homoglyphs, and dangerous TLDs."""
+    return inspect_url(request.url)
+
+
+@app.post("/api/upi-inspect")
+def api_upi_inspect(request: UpiInspectRequest) -> Dict[str, Any]:
+    """Analyzes a UPI intent query or address for fraud vectors."""
+    return inspect_upi(request.query)
+
+
+@app.get("/api/intel")
+def get_threat_intel() -> List[Dict[str, Any]]:
+    """Retrieve curated active zero-day scam and threat campaigns."""
+    return [
+        {
+            "id": "INTEL-2026-001",
+            "title": "CBI / Police Digital Arrest Coercion",
+            "severity": "CRITICAL",
+            "vector": "Video Call Extortion / Authority Impersonation",
+            "target": "Senior Citizens & Remote Workers",
+            "sample": "This is Officer Sharma from Crime Branch. A DHL parcel with narcotics was found in your name. Stay on video call under digital arrest or face immediate custody.",
+            "indicators": ["Demands immediate video call", "Promises 'RBI Safe Account' transfer", "Threatens immediate non-bailable arrest warrant"]
+        },
+        {
+            "id": "INTEL-2026-002",
+            "title": "Smart Electricity Meter Disconnection SMS",
+            "severity": "HIGH",
+            "vector": "Remote Access APK Dropper (AnyDesk/RustDesk)",
+            "target": "Homeowners & Small Businesses",
+            "sample": "Dear Consumer, your electricity power will be disconnected at 9:30 PM tonight as last month bill was not updated. Call electricity officer immediately at 9876543210.",
+            "indicators": ["Fake disconnection deadline", "Personal mobile phone number", "Asks to install screen sharing APK"]
+        },
+        {
+            "id": "INTEL-2026-003",
+            "title": "Telegram YouTube / Google Review Task Scam",
+            "severity": "HIGH",
+            "vector": "Deposit Trap / Ponzi Commission",
+            "target": "Job Seekers & Students",
+            "sample": "Earn Rs 3000 daily by simply liking YouTube videos and rating hotels on Google. Small prepaid task of Rs 1000 gives Rs 1800 return within 15 minutes.",
+            "indicators": ["Unrealistic high daily payout", "Prepaid task deposit requirement", "Operated through unverified Telegram groups"]
+        },
+        {
+            "id": "INTEL-2026-004",
+            "title": "Bank PAN/KYC Deactivation Phishing",
+            "severity": "CRITICAL",
+            "vector": "Credential Harvesting / OTP Exfiltration",
+            "target": "Retail Bank Customers",
+            "sample": "Alert: Your SBI NetBanking account will be suspended today due to unlinked PAN card. Update PAN immediately to avoid block: https://sbi-pan-kyc.top/login",
+            "indicators": ["Spoofed bank domain (.top / .xyz)", "Fake sense of account freezing", "Demands password & OTP"]
+        },
+        {
+            "id": "INTEL-2026-005",
+            "title": "Refund QR Payment Trap ('Receive Money')",
+            "severity": "HIGH",
+            "vector": "UPI Debit Exploit",
+            "target": "Online Sellers & OLX Users",
+            "sample": "I have sent you the advance payment via QR code. Please scan this QR code and enter your UPI PIN to receive Rs 15,000 in your bank account.",
+            "indicators": ["Claims scanning QR receives funds", "Requests UPI PIN to receive money", "Uses pressure to confirm quickly"]
+        }
+    ]
 
 
 @app.get("/api/history")

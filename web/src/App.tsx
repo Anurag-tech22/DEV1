@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { ShieldCheck, Target, FileText } from 'lucide-react';
+import { ShieldCheck, Target, FileText, Radio } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Scanner from './pages/Scanner';
 import Simulator from './pages/Simulator';
 import Logs from './pages/Logs';
 import BreachMonitor from './pages/BreachMonitor';
+import ThreatRadar from './pages/ThreatRadar';
 import { i18n } from './i18n';
 import { Canvas } from '@react-three/fiber';
 import CyberScene from './components/CyberScene';
@@ -27,6 +28,7 @@ export default function App() {
 
   const navItems = [
     { path: '/', label: t.navScanner, icon: <ShieldCheck size={20} /> },
+    { path: '/radar', label: 'Threat Radar', icon: <Radio size={20} /> },
     { path: '/breach', label: 'Dark Web', icon: <Target size={20} /> },
     { path: '/simulator', label: t.navDrills, icon: <Target size={20} /> },
     { path: '/logs', label: t.navLogs, icon: <FileText size={20} /> },
@@ -57,7 +59,7 @@ export default function App() {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
                 <h1 className="gradient-text" style={{ fontSize: '2.5rem', fontWeight: 700, margin: 0, letterSpacing: '-1px' }}>
-                  {t.appTitle} <span style={{ fontSize: '1rem', color: 'var(--accent)', verticalAlign: 'top' }}>v2.0</span>
+                  {t.appTitle}
                 </h1>
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -117,6 +119,7 @@ export default function App() {
             <AnimatePresence mode="wait">
               <Routes>
                 <Route path="/" element={<Scanner language={language} t={t} />} />
+                <Route path="/radar" element={<ThreatRadar />} />
                 <Route path="/breach" element={<BreachMonitor t={t} />} />
                 <Route path="/simulator" element={<Simulator t={t} />} />
                 <Route path="/logs" element={<Logs t={t} />} />

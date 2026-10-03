@@ -47,6 +47,11 @@ htmlcov/
 .tox/
 .nox/
 
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
 # Environment Variables & Secrets
 .env
 .env.local
