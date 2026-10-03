@@ -17,7 +17,7 @@ import CyberScene from './components/CyberScene';
 type Lang = keyof typeof i18n;
 
 export default function App() {
-  const [language, setLanguage] = useState<Lang>('en');
+  const [language] = useState<Lang>('en');
   const [systemTime, setSystemTime] = useState('');
 
   useEffect(() => {
