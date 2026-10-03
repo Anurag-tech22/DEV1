@@ -22,7 +22,7 @@ const getCookieLang = (): Lang => {
 };
 
 export default function App() {
-  const [language, setLanguage] = useState<Lang>(getCookieLang());
+  const [language] = useState<Lang>(getCookieLang());
   const [systemTime, setSystemTime] = useState('');
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
