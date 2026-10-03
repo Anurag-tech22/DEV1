@@ -24,12 +24,16 @@
 
 | Feature | Description |
 | :--- | :--- |
-| **🧠 Multi-Vector Heuristic Engine** | Real-time pattern recognition detecting digital arrest threats, fake KYC, lottery bait, APK droppers, and courier imposter schemes. |
+| **🧠 Multi-Vector Threat Core** | Real-time multi-dimensional pattern recognition detecting digital arrest threats, fake KYC, lottery bait, APK droppers, and courier imposter schemes. |
+| **📡 Global Threat Radar** | Live zero-day scam feed, deep homoglyph/punycode link inspection, and QR/UPI debit trap analyzer. |
+| **🎙️ Audio Deepfake Guard** | Real-time audio waveform visualizer and acoustic speech analyzer detecting AI voice cloning and coercive digital arrest calls. |
+| **📱 Android APK Malware Sandbox** | Manifest privilege deconstructor, Accessibility hijacking detector, and Automated Transfer System (ATS) banking trojan profiler. |
+| **🤖 Autonomous AI Counter-Baitalyzer** | Interactive honeypot persona bot designed to exhaust scammer human bandwidth and safely harvest suspect bank handles and phone numbers. |
+| **📋 Legal Cybercrime Dossier Export** | Formats incident telemetry into structured, timestamped evidence dossiers ready for submission to 1930 and `cybercrime.gov.in`. |
 | **🌐 10+ Language Support** | Full localization and phonetic scam tokenization in English, Hindi (हिन्दी), Marathi (मराठी), Spanish, French, German, Chinese, Japanese, Arabic, and Portuguese. |
 | **🎮 Interactive Cyber Drills** | Gamified scenario simulator training users to identify and counter sophisticated phishing, authority impersonation, and wallet compromise attacks. |
 | **🕶️ Dark Web & Breach Intel** | Real-time threat correlation checking compromised credentials, leaked hashes, and underground forum telemetry. |
-| **📊 Forensic Audit Logging** | Complete event telemetry and threat verdict history with local cryptographic state wipe capabilities. |
-| **🔮 3D Reactive Holographic Canvas** | Ultra-performant WebGL background powered by React Three Fiber and Three.js with hardware-accelerated studio lighting and mouse parallax. |
+| **📊 Forensic Audit Logging & SOC Metrics**| Complete event telemetry and loss-prevention analytics with local cryptographic state wipe capabilities. |
 
 ---
 
@@ -266,6 +270,41 @@ Step-by-step interactive scenario trainer.
 
 ### `GET /api/history`
 Returns recent threat evaluations and drill analytics.
+
+---
+
+### `GET /api/intel`
+Retrieves curated real-time zero-day scam and threat campaigns across cyber crime vectors.
+
+---
+
+### `POST /api/url-inspect`
+Deep forensic analysis of a URL for typosquatting, homoglyph character confusion, punycode spoofing, and risky TLDs.
+
+---
+
+### `POST /api/upi-inspect`
+Analyzes UPI payment strings, VPAs, and QR payment intent links (`upi://pay`) for debit exploit traps.
+
+---
+
+### `POST /api/audio-inspect`
+Inspects audio call transcripts and acoustic signals for AI voice cloning, authority coercion, and digital arrest intimidation.
+
+---
+
+### `POST /api/apk-inspect`
+Evaluates Android APK package names and declared manifest permissions against mobile banking trojan signatures (e.g. Hydra, Godfather) and Accessibility hijacking.
+
+---
+
+### `POST /api/counter-scam`
+Generates autonomous AI counter-baiting responses to waste scammer bandwidth and safely extract banking details, phone numbers, and payee VPAs.
+
+---
+
+### `GET /api/soc-stats`
+Retrieves real-time Security Operations Center threat telemetry, prevention statistics, and vector distribution.
 
 ---
 

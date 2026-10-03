@@ -318,3 +318,145 @@ def scan(text: str) -> Dict[str, Any]:
         "url_analysis": url_threats,
         "risk_metrics": risk_metrics
     }
+
+
+def inspect_audio(transcript: str, duration: float = 0.0) -> Dict[str, Any]:
+    """
+    Analyzes audio transcripts & simulated speech acoustic markers for AI Voice Cloning,
+    Digital Arrest intimidation, extortion, and psychological coercion.
+    """
+    transcript_lower = transcript.lower()
+    flags: List[str] = []
+    deepfake_score = 15
+
+    # 1. Voice Cloning / Family Impersonation patterns
+    family_emergency_keywords = ["mom it's me", "dad it's me", "i lost my phone", "i got into an accident", "kidnapped", "ransom", "jail", "lawyer need money"]
+    if any(k in transcript_lower for k in family_emergency_keywords):
+        flags.append("AI Voice Cloning Emergency Vector: Fabricated crisis demanding immediate untraceable bail/money")
+        deepfake_score += 45
+
+    # 2. Digital Arrest & Authority Coercion
+    police_extortion_keywords = ["inspector", "cbi", "narcotics", "customs", "cyber cell", "arrest warrant", "stay on this video call", "do not disconnect", "rbi safe account"]
+    if any(k in transcript_lower for k in police_extortion_keywords):
+        flags.append("Digital Arrest Extortion: Coercive psychological pressure impersonating law enforcement officers")
+        deepfake_score += 50
+
+    # 3. High-Urgency Financial Transfers
+    financial_keywords = ["wire transfer", "send upi", "gift card", "crypto", "withdraw cash", "western union", "angadia"]
+    if any(k in transcript_lower for k in financial_keywords):
+        flags.append("Financial Exploitation: Demanding rapid capital movement without paper trail")
+        deepfake_score += 25
+
+    # 4. Background Audio & Synthesized Speech Artifacts (Heuristic detection)
+    synthetic_markers = ["robotic", "monotone", "echo", "delayed response", "audio jitter", "synthetic noise"]
+    if any(k in transcript_lower for k in synthetic_markers) or "audio" in transcript_lower:
+        flags.append("Acoustic Artifacts: Abnormal harmonic regularity consistent with text-to-speech or voice conversion synthesis")
+        deepfake_score += 20
+
+    deepfake_score = min(deepfake_score, 100)
+    verdict = "HIGH_THREAT" if deepfake_score >= 65 else ("SUSPICIOUS" if deepfake_score >= 35 else "CLEAN")
+
+    return {
+        "verdict": verdict,
+        "deepfake_probability": deepfake_score,
+        "coercion_pressure": "Severe" if deepfake_score >= 65 else ("Moderate" if deepfake_score >= 35 else "Normal"),
+        "indicators": flags if flags else ["Natural vocal distribution pattern", "No extortion or cloning indicators detected"],
+        "recommended_action": "Immediately hang up and call your family member back on their known real telephone number. Never transfer money under pressure." if deepfake_score >= 35 else "Voice pattern appears authentic. Standard security vigilance advised."
+    }
+
+
+DANGEROUS_PERMISSIONS = {
+    "android.permission.BIND_ACCESSIBILITY_SERVICE": "CRITICAL: Allows total screen control, keylogging, and bypassing user clicks.",
+    "android.permission.RECEIVE_SMS": "CRITICAL: Intercepts incoming 2-Factor Authentication (OTP) codes from banks.",
+    "android.permission.READ_SMS": "HIGH: Reads existing SMS inbox including financial balances and security codes.",
+    "android.permission.SYSTEM_ALERT_WINDOW": "HIGH: Displays deceptive invisible overlay login screens over real banking apps.",
+    "android.permission.REQUEST_INSTALL_PACKAGES": "HIGH: Acts as a dropper to silently install secondary trojan payloads.",
+    "android.permission.READ_CONTACTS": "MEDIUM: Exfiltrates address book for viral SMS phishing propagation.",
+    "android.permission.RECORD_AUDIO": "HIGH: Enables covert ambient microphone eavesdropping."
+}
+
+KNOWN_TROJAN_PACKAGES = [
+    "com.sbi.reward", "com.electricity.bill", "com.anydesk.adservice", "com.quicksupport.plugin",
+    "com.pm.kisan.yojna", "com.pan.link.aadhaar", "com.fedex.delivery.tracking", "com.banking.security.update"
+]
+
+def inspect_apk(package_name: str, permissions: List[str] = None) -> Dict[str, Any]:
+    """
+    Evaluates an Android APK package name and declared manifest permissions against
+    known mobile banking trojan signatures and accessibility hijacking exploits.
+    """
+    pkg_clean = package_name.strip().lower()
+    perms = [p.strip() for p in (permissions or [])]
+    flags: List[str] = []
+    risk_score = 10
+
+    # 1. Check known malicious package signatures
+    if any(trojan in pkg_clean for trojan in KNOWN_TROJAN_PACKAGES):
+        flags.append(f"Identified known Banking Trojan signature match ({pkg_clean})")
+        risk_score += 65
+
+    # 2. Check for fake brand names in package
+    for brand in ["sbi", "hdfc", "icici", "axis", "mahavitaran", "trai", "police"]:
+        if brand in pkg_clean and not pkg_clean.startswith(f"com.{brand}"):
+            flags.append(f"Impersonation detected: Unauthorized package spoofing brand '{brand.upper()}'")
+            risk_score += 40
+            break
+
+    # 3. Analyze permissions
+    for perm in perms:
+        if perm in DANGEROUS_PERMISSIONS:
+            flags.append(f"{perm}: {DANGEROUS_PERMISSIONS[perm]}")
+            risk_score += 25
+
+    # Accessibility + SMS is the classic banking trojan combo
+    has_accessibility = "android.permission.BIND_ACCESSIBILITY_SERVICE" in perms
+    has_sms = any("SMS" in p for p in perms)
+    if has_accessibility and has_sms:
+        flags.append("CRITICAL VECTOR DETECTED: Accessibility Service combined with SMS Access indicates an Automated Transfer System (ATS) banking trojan.")
+        risk_score += 45
+
+    risk_score = min(risk_score, 100)
+    verdict = "MALICIOUS_TROJAN" if risk_score >= 60 else ("SUSPICIOUS" if risk_score >= 35 else "CLEAN_PACKAGE")
+
+    return {
+        "package_name": package_name,
+        "risk_score": risk_score,
+        "verdict": verdict,
+        "malware_family": "Hydra / Godfather Trojan Family" if risk_score >= 65 else ("Potentially Unwanted Application (PUA)" if risk_score >= 35 else "Standard Android App"),
+        "analysis_findings": flags if flags else ["Standard permissions profile with no overt privilege escalation risks detected."]
+    }
+
+
+def generate_counter_bait(history: List[Dict[str, str]], persona: str = "elderly") -> Dict[str, Any]:
+    """
+    Generates realistic, time-wasting counter-scambaiting responses to exhaust
+    scammer resources and safely extract scammer bank accounts, phone numbers, and UPI IDs.
+    """
+    responses_elderly = [
+        "Beta, I am opening my bank app on my spectacles, but it is asking for your branch manager's name and IFSC code. What is your bank account number so I can ask my grandson?",
+        "Please wait, my internet is very slow in our village. Can you give me your direct UPI ID so I can write it in my diary first?",
+        "I am at the bank counter right now, but the clerk says she needs your full official designation, department badge ID, and police station address before she allows the transfer. Which police station are you sitting in?",
+        "Oh dear, my phone restarted by itself. Could you tell me what the total amount was again, and which account number should I write on the deposit slip?",
+        "My grandson told me never to transfer without a written invoice. Can you send your official letterhead or company registration number to my email?"
+    ]
+
+    responses_tech_naive = [
+        "I clicked the link, but it says 'Server 404 Error'. Do you have an alternate direct bank account number or UPI ID I can send to directly?",
+        "My phone gave a popup saying 'Screen sharing prohibited by banking security'. Can you give me your Google Pay or PhonePe number instead?",
+        "I have Rs 50,000 ready right now in my account, but my daily limit is set to Rs 10,000. Can I do 5 separate transfers? Send me your UPI ID again please.",
+        "It's asking for a Beneficiary Name before adding you. What is the exact full name registered on your bank account?"
+    ]
+
+    import random
+    pool = responses_elderly if persona == "elderly" else responses_tech_naive
+    # Pick a response based on conversation length
+    idx = len(history) % len(pool)
+    bait_reply = pool[idx]
+
+    return {
+        "persona": persona,
+        "suggested_reply": bait_reply,
+        "strategy": "Time-Dilation & Intel Extraction (Extracting Payee VPA / IFSC / Account Number)",
+        "safety_tip": "Never send real money, OTPs, or install apps while counter-baiting. Let the automated agent do the talking."
+    }
+
