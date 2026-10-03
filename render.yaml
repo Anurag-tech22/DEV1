@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: kavach-web
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    envVars:
+      - key: LLAMA_URL
+        fromService:
+          type: pserv
+          name: kavach-llm
+          property: hostport
+      - key: NTFY_TOPIC
+        sync: false
+      - key: DATA_DIR
+        value: /data
+    disk:
+      name: kavach-data
+      mountPath: /data
+      sizeGB: 1
+  - type: pserv
+    name: kavach-llm
+    runtime: docker
+    dockerfilePath: ./llm/Dockerfile
+    dockerContext: ./llm

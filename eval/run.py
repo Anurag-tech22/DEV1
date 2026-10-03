@@ -1,0 +1,6 @@
+import sys,os;sys.path.insert(0,os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from app.rules import scan
+SCAM=["Sir this is CBI, stay on video call, digital arrest, transfer to RBI safe account","Your KYC will expire today, account will be blocked. Share OTP bata do","Congratulations you won KBC lottery, pay fee and send PIN","Courier customs parcel seized drugs, urgent, don't tell anyone","Aapka khata block ho jayega, abhi OTP share karo","Refund ke liye ye link click karo https://bit.ly/x aur UPI PIN dalo","Guaranteed return double your money, join part time job earn daily","तुमचे KYC लगेच अपडेट करा नाहीतर खाते बंद होईल, OTP सांगा"]
+OK=["Your OTP for login is 482913. Do not share it with anyone.","Your order has been delivered. Thank you for shopping.","Dr. Mehta appointment confirmed for Monday 5 PM.","Beta, I will reach home by 7. Keep dinner ready.","Electricity bill of Rs 840 is due on 15th. Pay at the official counter.","Salary credited to your account.","Happy birthday! Party at 6 tonight.","Your bank statement for September is ready in the app."]
+d=sum(scan(t)["verdict"]!="safe" for t in SCAM);f=sum(scan(t)["verdict"]!="safe" for t in OK)
+print(f"| Detector | Detection | False alarm |\n|---|---|---|\n| Rules layer | {d}/{len(SCAM)} | {f}/{len(OK)} |")

@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>OmniGuard Security</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #1a2333;
+      --border: #2a3548;
+      --text: #f0f4f8;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --scam-color: #ef4444;
+      --suspicious-color: #f59e0b;
+      --safe-color: #10b981;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', sans-serif; }
+    
+    body { background-color: var(--bg); color: var(--text); line-height: 1.5; padding: 0 1rem; }
+    
+    header { max-width: 800px; margin: 3rem auto 2rem; text-align: center; }
+    header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(to right, #60a5fa, #a78bfa); -webkit-background-clip: text; color: transparent; }
+    header p { color: var(--text-muted); font-size: 1.1rem; }
+    
+    .lang-selector { margin-top: 1rem; display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .lang-selector button { 
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); 
+      padding: 0.25rem 0.75rem; border-radius: 999px; cursor: pointer; font-size: 0.85rem; transition: 0.2s;
+    }
+    .lang-selector button:hover { border-color: var(--text-muted); color: var(--text); }
+    .lang-selector button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+    
+    nav { max-width: 800px; margin: 0 auto 2rem; display: flex; gap: 0.5rem; background: var(--surface); padding: 0.5rem; border-radius: 12px; border: 1px solid var(--border); }
+    nav button { 
+      flex: 1; background: transparent; border: none; color: var(--text-muted); padding: 0.75rem; 
+      border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 500; transition: 0.3s;
+    }
+    nav button:hover { color: var(--text); }
+    nav button[aria-selected="true"] { background: var(--bg); color: var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    
+    main { max-width: 800px; margin: 0 auto 4rem; }
+    section { display: none; }
+    section.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    
+    textarea { 
+      width: 100%; height: 180px; background: var(--bg); border: 1px solid var(--border); 
+      border-radius: 12px; padding: 1rem; color: var(--text); font-size: 1rem; 
+      resize: vertical; margin-bottom: 1rem; transition: border-color 0.2s;
+    }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    
+    .actions { display: flex; gap: 1rem; }
+    .btn { 
+      flex: 1; padding: 1rem; border: none; border-radius: 12px; font-size: 1.1rem; 
+      font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--bg); border: 1px solid var(--border); color: var(--text); }
+    .btn-secondary:hover { border-color: var(--text-muted); }
+    
+    /* Result UI */
+    #out { margin-top: 1.5rem; }
+    .result-card { border: 2px solid; border-radius: 16px; overflow: hidden; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    
+    .res-header { padding: 1.5rem; display: flex; align-items: center; gap: 1rem; color: #fff; }
+    .res-header svg { width: 48px; height: 48px; }
+    .res-header h2 { font-size: 1.8rem; line-height: 1.1; }
+    
+    .res-body { padding: 1.5rem; background: var(--surface); }
+    .res-body h3 { margin: 1.5rem 0 0.5rem; font-size: 1.1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .res-body ul { list-style: none; }
+    .res-body li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; }
+    .res-body li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+    
+    .score-bar { width: 100%; height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; margin-top: 1rem; overflow: hidden; }
+    .score-fill { height: 100%; transition: width 1s cubic-bezier(0.22, 1, 0.36, 1); }
+    
+    /* Simulator UI */
+    .sim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .sim-card { 
+      background: var(--bg); border: 1px solid var(--border); padding: 1rem; 
+      border-radius: 12px; cursor: pointer; text-align: center; transition: 0.2s;
+    }
+    .sim-card:hover { border-color: var(--accent); color: var(--accent); }
+    
+    #chat { background: var(--bg); border-radius: 12px; padding: 1rem; height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem; border: 1px solid var(--border); }
+    .msg-bubble { max-width: 80%; padding: 0.8rem 1.2rem; border-radius: 16px; font-size: 1rem; }
+    .msg-bot { background: var(--surface); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .msg-user { background: var(--accent); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .msg-system { background: rgba(16, 185, 129, 0.1); color: var(--safe-color); text-align: center; align-self: center; border: 1px solid rgba(16, 185, 129, 0.2); font-weight: 500; }
+    
+    #sim-input { display: flex; gap: 0.5rem; }
+    #rep { flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 1rem; border-radius: 12px; font-size: 1rem; }
+    #rep:focus { outline: none; border-color: var(--accent); }
+    
+    /* Logs */
+    .history-item { padding: 1rem; border-bottom: 1px solid var(--border); }
+    .history-item:last-child { border-bottom: none; }
+    .badge { padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; color: #fff; margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 id="t_name">OmniGuard</h1>
+    <p id="t_sub">Universal AI Threat & Scam Detector</p>
+    <div class="lang-selector">
+      <button data-l="en" aria-pressed="true">English</button>
+      <button data-l="es" aria-pressed="false">Español</button>
+      <button data-l="fr" aria-pressed="false">Français</button>
+      <button data-l="hi" aria-pressed="false">हिन्दी</button>
+      <button data-l="mr" aria-pressed="false">मराठी</button>
+      <button data-l="zh" aria-pressed="false">中文</button>
+      <button data-l="ar" aria-pressed="false">العربية</button>
+      <button data-l="pt" aria-pressed="false">Português</button>
+    </div>
+  </header>
+  
+  <nav>
+    <button data-target="tab-scan" aria-selected="true" id="n_check">Scanner</button>
+    <button data-target="tab-sim" aria-selected="false" id="n_drill">Simulations</button>
+    <button data-target="tab-logs" aria-selected="false" id="n_fam">Global Logs</button>
+  </nav>
+
+  <main>
+    <section id="tab-scan" class="active">
+      <div class="card">
+        <textarea id="msg" placeholder="Paste an email, SMS, or message here to analyze it for threats..."></textarea>
+        <div class="actions">
+          <button class="btn btn-secondary" id="clear">Clear</button>
+          <button class="btn btn-primary" id="scan">Analyze Threat Level</button>
+        </div>
+      </div>
+      <div id="out" aria-live="polite"></div>
+    </section>
+
+    <section id="tab-sim">
+      <div class="card">
+        <div class="sim-grid" id="sc">
+          <button class="sim-card" data-s="phishing">Phishing Link</button>
+          <button class="sim-card" data-s="crypto">Crypto Airdrop</button>
+          <button class="sim-card" data-s="job_offer">Fake Job Offer</button>
+          <button class="sim-card" data-s="digital_arrest">Digital Arrest</button>
+        </div>
+        <div id="dr" style="display: none;">
+          <div id="chat" aria-live="polite"></div>
+          <div id="sim-input">
+            <input type="text" id="rep" placeholder="Type your response...">
+            <button class="btn btn-primary" id="send" style="padding: 0 1.5rem;">Send</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-logs">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 id="t_h1" style="font-size: 1.2rem;">Recent Scans</h3>
+          <button class="btn btn-secondary" id="wipe" style="padding: 0.5rem 1rem; color: var(--scam-color);">Clear All</button>
+        </div>
+        <div id="hv" style="margin-bottom: 2rem;"></div>
+        
+        <h3 id="t_h2" style="font-size: 1.2rem; margin-bottom: 1rem;">Training Sessions</h3>
+        <div id="hd"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const T = {
+      en: {
+        name: "OmniGuard", sub: "Universal AI Threat & Scam Detector", check: "Scanner", drill: "Simulations", fam: "Global Logs",
+        go: "Analyze Threat Level", scam: "Critical Threat Detected", suspicious: "Suspicious Activity", safe: "Safe / No Threats",
+        why: "Analysis", todo: "Recommended Actions", none: "No records found.", pass: "Simulation Passed", fail: "Simulation Failed",
+        h1: "Recent Scans", h2: "Training Sessions"
+      },
+      hi: {
+        name: "ऑम्नीगार्ड", sub: "यूनिवर्सल एआई खतरा और घोटाला डिटेक्टर", check: "स्कैनर", drill: "सिमुलेशन", fam: "लॉग्स",
+        go: "खतरे के स्तर का विश्लेषण करें", scam: "गंभीर खतरा", suspicious: "संदिग्ध गतिविधि", safe: "सुरक्षित",
+        why: "विश्लेषण", todo: "अनुशंसित कार्रवाई", none: "कोई रिकॉर्ड नहीं मिला।", pass: "सिमुलेशन पास", fail: "सिमुलेशन विफल",
+        h1: "हाल के स्कैन", h2: "प्रशिक्षण सत्र"
+      },
+      mr: {
+        name: "ऑम्नीगार्ड", sub: "युनिव्हर्सल एआय धोका आणि घोटाळा डिटेक्टर", check: "स्कॅनर", drill: "सिम्युलेशन", fam: "लॉग्स",
+        go: "धोक्याची पातळी तपासा", scam: "गंभीर धोका", suspicious: "संशयास्पद क्रियाकलाप", safe: "सुरक्षित",
+        why: "विश्लेषण", todo: "शिफारस केलेली कृती", none: "कोणत्याही नोंदी आढळल्या नाहीत.", pass: "सिम्युलेशन उत्तीर्ण", fail: "सिम्युलेशन अयशस्वी",
+        h1: "अलीकडील स्कॅन", h2: "प्रशिक्षण सत्रे"
+      },
+      es: {
+        name: "OmniGuard", sub: "Detector Universal de Amenazas", check: "Escáner", drill: "Simulaciones", fam: "Registros",
+        go: "Analizar Nivel de Amenaza", scam: "Amenaza Crítica", suspicious: "Actividad Sospechosa", safe: "Seguro",
+        why: "Análisis", todo: "Acciones Recomendadas", none: "Sin registros.", pass: "Simulación Aprobada", fail: "Simulación Fallida",
+        h1: "Escaneos Recientes", h2: "Sesiones de Entrenamiento"
+      },
+      fr: {
+        name: "OmniGuard", sub: "Détecteur de Menaces Universel", check: "Scanner", drill: "Simulations", fam: "Journaux",
+        go: "Analyser la Menace", scam: "Menace Critique", suspicious: "Activité Suspecte", safe: "Sécurisé",
+        why: "Analyse", todo: "Actions Recommandées", none: "Aucun enregistrement.", pass: "Simulation Réussie", fail: "Simulation Échouée",
+        h1: "Analyses Récentes", h2: "Sessions de Formation"
+      }
+    };
+    
+    let L = localStorage.lang || "en";
+    let currentScenario = "", currentStep = 0;
+    const $ = id => document.getElementById(id);
+    const t = k => (T[L] && T[L][k]) ? T[L][k] : T["en"][k];
+    
+    // XSS Prevention: Escape HTML characters
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    
+    const colors = { scam: "var(--scam-color)", suspicious: "var(--suspicious-color)", safe: "var(--safe-color)" };
+    const icons = {
+      scam: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>',
+      suspicious: '<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>',
+      safe: '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>'
+    };
+    
+    function ui() {
+      document.documentElement.lang = L;
+      $("t_name").textContent = t("name"); $("t_sub").textContent = t("sub");
+      $("n_check").textContent = t("check"); $("n_drill").textContent = t("drill"); $("n_fam").textContent = t("fam");
+      $("scan").textContent = t("go"); $("t_h1").textContent = t("h1"); $("t_h2").textContent = t("h2");
+      document.querySelectorAll(".lang-selector button").forEach(b => b.setAttribute("aria-pressed", b.dataset.l == L));
+    }
+    
+    document.querySelectorAll(".lang-selector button").forEach(b => {
+      b.onclick = () => { L = localStorage.lang = b.dataset.l; ui(); };
+    });
+    
+    // Tabs
+    document.querySelectorAll("nav button").forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", "false"));
+        document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+        btn.setAttribute("aria-selected", "true");
+        $(btn.dataset.target).classList.add("active");
+        if(btn.dataset.target === "tab-logs") loadHistory();
+      };
+    });
+    
+    $("clear").onclick = () => { $("msg").value = ""; $("out").innerHTML = ""; };
+    
+    $("scan").onclick = async () => {
+      const text = $("msg").value.trim();
+      if (!text) return;
+      
+      $("out").innerHTML = `<div style="text-align:center; padding: 2rem; color: var(--text-muted);" aria-live="polite">Analyzing threat vectors...</div>`;
+      
+      try {
+        const res = await fetch("/api/scan", { method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({text, lang: L}) });
+        const data = await res.json();
+        const c = colors[data.verdict];
+        
+        let html = `
+          <div class="result-card" style="border-color: ${c}" aria-live="assertive">
+            <div class="res-header" style="background: ${c}">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${icons[data.verdict]}</svg>
+              <div>
+                <h2>${esc(t(data.verdict))}</h2>
+                <span>Severity Score: ${data.score}/100</span>
+              </div>
+            </div>
+            <div class="res-body">
+              <div class="score-bar" role="progressbar" aria-valuenow="${data.score}" aria-valuemin="0" aria-valuemax="100"><div class="score-fill" style="width: 0%; background: ${c}"></div></div>
+              ${data.explain ? `<p style="font-size: 1.1rem; color: #fff;">${esc(data.explain)}</p>` : ""}
+              ${data.reasons.length ? `<h3>${t("why")}</h3><ul>${data.reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>` : ""}
+              <h3>${t("todo")}</h3>
+              <ul>${data.actions.map(a => `<li>${esc(a)}</li>`).join("")}</ul>
+            </div>
+          </div>
+        `;
+        $("out").innerHTML = html;
+        setTimeout(() => { 
+          const fill = document.querySelector('.score-fill');
+          if(fill) fill.style.width = data.score + '%'; 
+        }, 100);
+      } catch(e) {
+        $("out").innerHTML = `<div style="color: var(--scam-color); padding: 1rem;" role="alert">Analysis failed. Please try again.</div>`;
+      }
+    };
+    
+    const chat = (msg, type) => {
+      const div = document.createElement("div");
+      div.className = `msg-bubble msg-${type}`;
+      div.textContent = msg; // textContent is safe against XSS
+      $("chat").appendChild(div);
+      // scroll to bottom
+      $("chat").scrollTop = $("chat").scrollHeight;
+    };
+    
+    document.querySelectorAll("#sc button").forEach(btn => {
+      btn.onclick = async () => {
+        currentScenario = btn.dataset.s; currentStep = 0;
+        $("chat").innerHTML = ""; $("dr").style.display = "block";
+        const res = await (await fetch("/api/drill", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({scenario: currentScenario, step: 0})})).json();
+        chat(res.line, "bot");
+        currentStep = 1;
+      };
+    });
+    
+    $("send").onclick = async () => {
+      const reply = $("rep").value.trim();
+      if (!reply) return;
+      chat(reply, "user"); $("rep").value = "";
+      const res = await (await fetch("/api/drill", { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({scenario: currentScenario, step: currentStep, reply})})).json();
+      if (!res.done) {
+        chat(res.line, "bot"); currentStep++;
+      } else {
+        chat(res.debrief, "system");
+        $("dr").style.display = "none";
+      }
+    };
+    
+    $("rep").addEventListener("keypress", (e) => { if(e.key === 'Enter') $("send").click(); });
+
+    async function loadHistory() {
+      try {
+        const data = await (await fetch("/api/history")).json();
+        const dt = ts => new Date(ts * 1000).toLocaleString();
+        
+        $("hv").innerHTML = data.verdicts.length ? data.verdicts.map(v => `
+          <div class="history-item">
+            <span class="badge" style="background: ${colors[v.verdict]}">${esc(t(v.verdict))}</span> 
+            <span style="color: var(--text-muted); font-size: 0.85rem;">${esc(dt(v.ts))}</span>
+            <div style="margin-top: 0.5rem; opacity: 0.9;">${esc(v.text).slice(0, 100)}...</div>
+          </div>
+        `).join("") : `<p>${t("none")}</p>`;
+        
+        $("hd").innerHTML = data.drills.length ? data.drills.map(d => `
+          <div class="history-item">
+            <span class="badge" style="background: ${d.passed ? colors.safe : colors.scam}">${d.passed ? t("pass") : t("fail")}</span>
+            <span style="color: var(--text-muted); font-size: 0.85rem;">${esc(dt(d.ts))}</span>
+            <div style="margin-top: 0.5rem; text-transform: capitalize;">Scenario: ${esc(d.scenario.replace('_', ' '))}</div>
+          </div>
+        `).join("") : `<p>${t("none")}</p>`;
+      } catch (e) {
+        $("hv").innerHTML = `<p role="alert">Error loading history.</p>`;
+      }
+    }
+    
+    $("wipe").onclick = async () => {
+      if (confirm("Clear all logs?")) {
+        await fetch("/api/all", { method: "DELETE" });
+        loadHistory();
+      }
+    };
+    
+    ui();
+  </script>
+</body>
+</html>
