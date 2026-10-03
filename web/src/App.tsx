@@ -30,14 +30,14 @@ export default function App() {
   const t = i18n[language] || i18n.en;
 
   const navItems = [
-    { path: '/', label: 'Threat Scanner', icon: <ShieldCheck size={18} /> },
-    { path: '/radar', label: 'Threat Radar', icon: <Radio size={18} /> },
-    { path: '/audio', label: 'Audio Guard', icon: <Volume2 size={18} /> },
-    { path: '/malware', label: 'APK Sandbox', icon: <Smartphone size={18} /> },
-    { path: '/honeypot', label: 'AI Baitalyzer', icon: <Bot size={18} /> },
-    { path: '/breach', label: 'Dark Web', icon: <Target size={18} /> },
-    { path: '/simulator', label: 'Drills', icon: <Target size={18} /> },
-    { path: '/logs', label: 'SOC Logs', icon: <FileText size={18} /> },
+    { path: '/', label: t.navScanner || 'Threat Scanner', icon: <ShieldCheck size={18} /> },
+    { path: '/radar', label: t.navRadar || 'Threat Radar', icon: <Radio size={18} /> },
+    { path: '/audio', label: t.navAudio || 'Audio Guard', icon: <Volume2 size={18} /> },
+    { path: '/malware', label: t.navMalware || 'APK Sandbox', icon: <Smartphone size={18} /> },
+    { path: '/honeypot', label: t.navHoneypot || 'AI Baitalyzer', icon: <Bot size={18} /> },
+    { path: '/breach', label: t.navBreach || 'Dark Web', icon: <Target size={18} /> },
+    { path: '/simulator', label: t.navDrills || 'Drills', icon: <Target size={18} /> },
+    { path: '/logs', label: t.navLogs || 'SOC Logs', icon: <FileText size={18} /> },
   ];
 
   return (
@@ -81,23 +81,6 @@ export default function App() {
                     <span style={{ color: 'var(--safe)', fontFamily: 'monospace', fontSize: '0.78rem' }}>SYS_ONLINE: {systemTime}</span>
                   </div>
 
-                  <select 
-                    className="lang-select" 
-                    value={language} 
-                    onChange={(e) => setLanguage(e.target.value as Lang)}
-                    style={{ background: '#000000', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.25)', fontSize: '0.85rem' }}
-                  >
-                    <option value="en">English (US)</option>
-                    <option value="hi">हिन्दी (HI)</option>
-                    <option value="mr">मराठी (MR)</option>
-                    <option value="es">Español (ES)</option>
-                    <option value="fr">Français (FR)</option>
-                    <option value="de">Deutsch (DE)</option>
-                    <option value="zh">中文 (ZH)</option>
-                    <option value="ja">日本語 (JA)</option>
-                    <option value="ar">العربية (AR)</option>
-                    <option value="pt">Português (PT)</option>
-                  </select>
                 </div>
               </div>
               
