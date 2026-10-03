@@ -16,9 +16,26 @@ import CyberScene from './components/CyberScene';
 
 type Lang = keyof typeof i18n;
 
+const getCookieLang = (): Lang => {
+  const match = document.cookie.match(/googtrans=\/en\/([a-z]{2}(-CN|-TW)?)/i);
+  return (match ? match[1] : 'en') as Lang;
+};
+
 export default function App() {
-  const [language] = useState<Lang>('en');
+  const [language, setLanguage] = useState<Lang>(getCookieLang());
   const [systemTime, setSystemTime] = useState('');
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const lang = e.target.value;
+    if (lang === 'en') {
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+    } else {
+      document.cookie = `googtrans=/en/${lang}; path=/;`;
+      document.cookie = `googtrans=/en/${lang}; path=/; domain=${window.location.hostname}`;
+    }
+    window.location.reload();
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,6 +98,23 @@ export default function App() {
                     <span style={{ color: 'var(--safe)', fontFamily: 'monospace', fontSize: '0.78rem' }}>SYS_ONLINE: {systemTime}</span>
                   </div>
 
+                  <select 
+                    className="lang-select notranslate" 
+                    value={language} 
+                    onChange={handleLanguageChange}
+                    style={{ background: '#000000', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.25)', fontSize: '0.85rem', padding: '0.4rem 0.8rem', borderRadius: '8px', outline: 'none' }}
+                  >
+                    <option value="en">English (US)</option>
+                    <option value="hi">हिन्दी (HI)</option>
+                    <option value="mr">मराठी (MR)</option>
+                    <option value="es">Español (ES)</option>
+                    <option value="fr">Français (FR)</option>
+                    <option value="de">Deutsch (DE)</option>
+                    <option value="zh-CN">中文 (ZH)</option>
+                    <option value="ja">日本語 (JA)</option>
+                    <option value="ar">العربية (AR)</option>
+                    <option value="pt">Português (PT)</option>
+                  </select>
                 </div>
               </div>
               
