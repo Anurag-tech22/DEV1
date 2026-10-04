@@ -20,7 +20,6 @@ const getCookieLang = (): Lang => {
 
 export default function App() {
   const [language] = useState<Lang>(getCookieLang());
-  const [systemTime, setSystemTime] = useState('');
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
@@ -34,12 +33,6 @@ export default function App() {
     window.location.reload();
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSystemTime(new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC');
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const t = i18n[language] || i18n.en;
 
@@ -75,12 +68,10 @@ export default function App() {
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  {/* Futuristic Status Ticker */}
-                  <div style={{ background: '#000000', border: '1px solid var(--safe)', padding: '0.3rem 0.8rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <motion.div animate={{ opacity: [1, 0.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
-                      <div style={{ width: '8px', height: '8px', background: 'var(--safe)', borderRadius: '50%' }} />
-                    </motion.div>
-                    <span style={{ color: 'var(--safe)', fontSize: '0.85rem', fontWeight: 500 }}>Online: {systemTime}</span>
+                  {/* Professional Status Badge */}
+                  <div style={{ background: 'transparent', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '0.3rem 0.8rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div style={{ width: '8px', height: '8px', background: 'var(--safe)', borderRadius: '50%' }} />
+                    <span style={{ color: '#e2e8f0', fontSize: '0.85rem', fontWeight: 500 }}>System Operational</span>
                   </div>
 
                   <select 
