@@ -123,9 +123,9 @@ class OmniAIEngine:
             "deepseek": "DeepSeek Coder V2",
             "qwen": "Alibaba Qwen Max",
             "nvidia": "NVIDIA NIM Llama 3",
-            "auto": "OmniGuard Neural Engine"
+            "auto": "OmniGuard AI Neural Engine"
         }
-        name = provider_names.get(provider, "OmniGuard Neural Engine")
+        name = provider_names.get(provider, "OmniGuard AI Neural Engine")
         
         explanations = [
             f"[{name} Analysis] This communication exploits psychological urgency to bypass rational decision-making protocols. It matches 94% of known social engineering vectors.",

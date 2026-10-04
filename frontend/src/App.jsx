@@ -30,7 +30,7 @@ function App() {
         <aside className="sidebar">
           <div className="sidebar-brand">
             <Shield color="var(--accent-color)" />
-            OmniGuard
+            OmniGuard AI
           </div>
           <nav className="sidebar-nav">
             {navItems.map((item) => (
@@ -49,7 +49,7 @@ function App() {
         {/* Main Content */}
         <main className="main-content">
           <header className="topbar">
-            <h1 className="page-title">OmniGuard Security Platform</h1>
+            <h1 className="page-title">OmniGuard AI Security Platform</h1>
             
             <select 
               className="lang-select" 

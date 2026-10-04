@@ -66,7 +66,7 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
     if (!result) return '';
     const now = new Date().toISOString();
     return `================================================================================
-OMNIGUARD CYBER DEFENSE - FORENSIC INCIDENT & COMPLAINT DOSSIER
+OmniGuard AI CYBER DEFENSE - FORENSIC INCIDENT & COMPLAINT DOSSIER
 Generated Timestamp: ${now}
 Report Classification: CONFIDENTIAL / EVIDENCE GRADE
 ================================================================================
@@ -111,7 +111,7 @@ Helpline: National Cyber Crime Helpline (1930)
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `omniguard_threat_dossier_${Date.now()}.txt`;
+    a.download = `omniguard_ai_threat_dossier_${Date.now()}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };

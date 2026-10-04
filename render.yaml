@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: omniguard-web
+    name: omniguard-ai-web
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile

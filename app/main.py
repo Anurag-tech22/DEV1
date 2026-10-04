@@ -64,7 +64,7 @@ def get_db_connection() -> sqlite3.Connection:
     return conn
 
 # FastAPI Application
-app = FastAPI(title="OmniGuard Cyber Defense Platform")
+app = FastAPI(title="OmniGuard AI Cyber Defense Platform")
 
 # Pydantic Models
 class ScanRequest(BaseModel):
@@ -150,7 +150,7 @@ async def send_notification(verdict_type: Optional[str]) -> None:
         async with httpx.AsyncClient(timeout=5.0) as client:
             await client.post(
                 f"https://ntfy.sh/{NTFY_TOPIC}",
-                content=f"OmniGuard Alert: High severity threat blocked ({verdict_type}). Please verify."
+                content=f"OmniGuard AI Alert: High severity threat blocked ({verdict_type}). Please verify."
             )
     except Exception as e:
         logger.error(f"Failed to send notification: {e}")

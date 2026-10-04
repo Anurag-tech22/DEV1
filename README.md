@@ -1,11 +1,11 @@
-# OmniGuard
+# OmniGuard AI
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/Anurag-tech22/DEV1/actions/workflows/ci.yml/badge.svg)](https://github.com/Anurag-tech22/DEV1/actions)
 [![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB.svg?logo=python&logoColor=white)](https://python.org)
 [![React: 19](https://img.shields.io/badge/React-19.0-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 
-OmniGuard is an open-source fraud detection and cyber defense platform. It is designed to identify and neutralize social engineering attacks, phishing, and financial fraud across digital channels.
+OmniGuard AI is an open-source fraud detection and cyber defense platform. It is designed to identify and neutralize social engineering attacks, phishing, and financial fraud across digital channels.
 
 [Features](#features) • [Architecture](#architecture) • [Installation](#installation) • [API](#api) • [Contributing](CONTRIBUTING.md) • [License](LICENSE)
 
@@ -23,7 +23,7 @@ OmniGuard is an open-source fraud detection and cyber defense platform. It is de
 
 ## Architecture
 
-OmniGuard uses a decoupled architecture with an asynchronous FastAPI backend and a React 19 + Vite frontend.
+OmniGuard AI uses a decoupled architecture with an asynchronous FastAPI backend and a React 19 + Vite frontend.
 
 ```
 User -> React Frontend -> FastAPI Backend -> Heuristic Rule Engine
@@ -33,7 +33,7 @@ User -> React Frontend -> FastAPI Backend -> Heuristic Rule Engine
 ## Repository Structure
 
 ```
-omniguard/
+OmniGuard AI/
 ├── app/                        # FastAPI Backend Service
 │   ├── main.py                 # API Gateway, routes & endpoints
 │   ├── rules.py                # Core scam engines & regex rules
@@ -91,8 +91,8 @@ Open your browser at `http://localhost:5173/`.
 
 ### 4. Docker Deployment
 ```bash
-docker build -t omniguard-security .
-docker run -p 8000:8000 omniguard-security
+docker build -t omniguard-ai-security .
+docker run -p 8000:8000 omniguard-ai-security
 ```
 
 ## API
