@@ -9,6 +9,7 @@ import BreachMonitor from './pages/BreachMonitor';
 import ThreatRadar from './pages/ThreatRadar';
 import AudioGuard from './pages/AudioGuard';
 import MalwareSandbox from './pages/MalwareSandbox';
+import Auth from './pages/Auth';
 import { i18n } from './i18n';
 
 type Lang = keyof typeof i18n;
@@ -20,6 +21,11 @@ const getCookieLang = (): Lang => {
 
 export default function App() {
   const [language] = useState<Lang>(getCookieLang());
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  if (!isAuthenticated) {
+    return <Auth onLogin={() => setIsAuthenticated(true)} />;
+  }
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value;
