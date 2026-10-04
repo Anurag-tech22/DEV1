@@ -12,12 +12,12 @@ export default function NetGraph() {
 
   const gData = useMemo(() => {
     const N = 300;
-    const nodes = [...Array(N).keys()].map(i => ({ id: i, val: Math.random() * 10 }));
+    const nodes = [...Array(N).keys()].map(i => ({ id: i, val: Math.abs(Math.sin(i * 12.34)) * 10 }));
     const links = [...Array(N).keys()]
       .filter(id => id)
       .map(id => ({
         source: id,
-        target: Math.round(Math.random() * (id - 1))
+        target: Math.round(Math.abs(Math.cos(id * 43.21)) * (id - 1))
       }));
 
     return { nodes, links };

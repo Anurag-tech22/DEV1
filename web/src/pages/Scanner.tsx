@@ -1,11 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldAlert, ShieldCheck, AlertTriangle, Fingerprint, FileDown, Copy, CheckCircle2, Link, Phone, CreditCard } from 'lucide-react';
-import { Canvas } from '@react-three/fiber';
-import { Environment } from '@react-three/drei';
-import Shield3D from '../components/Shield3D';
 
 interface ScanResult {
   verdict: 'safe' | 'suspicious' | 'scam';
@@ -28,18 +25,11 @@ interface ScanResult {
 }
 
 export default function Scanner({ language, t }: { language: string, t: any }) {
-  const [text, setText] = useState('');
+  const location = useLocation();
+  const [text, setText] = useState<string>((location.state as any)?.prefill || '');
   const [result, setResult] = useState<ScanResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [copiedDossier, setCopiedDossier] = useState(false);
-
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.state && (location.state as any).prefill) {
-      setText((location.state as any).prefill);
-    }
-  }, [location.state]);
 
   const handleScan = async () => {
     if (!text.trim()) return;
@@ -133,17 +123,6 @@ Helpline: National Cyber Crime Helpline (1930)
       exit={{ opacity: 0, y: -20 }}
     >
       <div className="glass-card">
-        
-        {/* 3D Visualizer */}
-        <div style={{ height: '180px', width: '100%', marginBottom: '1.5rem', borderRadius: '16px', overflow: 'hidden', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <Canvas camera={{ position: [0, 0, 5] }}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 10]} intensity={1} />
-            <Shield3D verdict={loading ? 'suspicious' : (result ? result.verdict : 'idle')} />
-            <Environment preset="city" />
-          </Canvas>
-        </div>
-
         <textarea
           placeholder={t.scanPlaceholder}
           value={text}
@@ -170,7 +149,7 @@ Helpline: National Cyber Crime Helpline (1930)
                   initial={{ top: 0 }}
                   animate={{ top: '100%' }}
                   transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-                  style={{ position: 'absolute', left: 0, right: 0, height: '2px', background: 'rgba(255,255,255,0.8)', boxShadow: '0 0 8px #fff' }}
+                  style={{ position: 'absolute', left: 0, right: 0, height: '2px', background: 'rgba(255,255,255,0.8)' }}
                 />
               </>
             ) : (
@@ -188,8 +167,7 @@ Helpline: National Cyber Crime Helpline (1930)
             exit={{ opacity: 0, height: 0 }}
             className="glass-card"
             style={{ 
-              borderColor: `color-mix(in srgb, ${getVerdictColor(result.verdict)} 50%, transparent)`,
-              boxShadow: `0 8px 32px color-mix(in srgb, ${getVerdictColor(result.verdict)} 10%, transparent)`
+              borderColor: `color-mix(in srgb, ${getVerdictColor(result.verdict)} 50%, transparent)`
             }}
           >
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: '2rem', marginBottom: '2rem', flexWrap: 'wrap' }}>

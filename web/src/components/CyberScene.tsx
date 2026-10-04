@@ -27,9 +27,9 @@ export default function CyberScene() {
     const count = 120;
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      const radius = 3.6 + Math.random() * 2.8;
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(Math.random() * 2 - 1);
+      const radius = 3.6 + Math.abs(Math.sin(i * 12.34)) * 2.8;
+      const theta = Math.abs(Math.cos(i * 45.67)) * Math.PI * 2;
+      const phi = Math.acos(Math.sin(i * 78.91));
       pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
       pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = radius * Math.cos(phi);

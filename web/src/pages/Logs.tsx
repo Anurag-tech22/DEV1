@@ -30,7 +30,10 @@ export default function Logs({ t }: { t: any }) {
   };
 
   useEffect(() => {
-    fetchLogs();
+    axios.get('/api/history').then(res => {
+      setScans(res.data.verdicts);
+      setDrills(res.data.drills);
+    }).catch(console.error);
   }, []);
 
   const handleWipe = async () => {

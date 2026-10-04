@@ -52,21 +52,7 @@ header {
   position: relative;
 }
 
-/* Subtle glowing orb effect in the background */
-header::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 300px;
-  height: 100px;
-  background: var(--accent);
-  filter: blur(100px);
-  opacity: 0.15;
-  z-index: -1;
-  pointer-events: none;
-}
+/* Removed glowing orb effect */
 
 .nav-tabs {
   display: flex;
@@ -106,20 +92,16 @@ header::before {
 }
 
 .glass-card {
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: #18181b;
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: 12px;
   padding: 2.5rem;
   color: #ffffff;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   margin-bottom: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .glass-card:hover {
-  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.95), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 textarea {
@@ -140,7 +122,6 @@ textarea {
 textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
 }
 
 textarea::placeholder {
@@ -175,7 +156,6 @@ input::placeholder {
 .btn-primary {
   background: var(--accent);
   color: #ffffff;
-  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.4);
 }
 
 .btn-primary:hover {
@@ -203,9 +183,9 @@ input::placeholder {
   color: #ffffff;
 }
 
-.badge-scam { background: var(--scam); box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4); }
-.badge-suspicious { background: var(--suspicious); box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4); }
-.badge-safe { background: var(--safe); box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4); }
+.badge-scam { background: var(--scam); }
+.badge-suspicious { background: var(--suspicious); }
+.badge-safe { background: var(--safe); }
 
 .lang-select {
   background: #000000;

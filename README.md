@@ -4,17 +4,17 @@
 ### Next-Gen Autonomous Cyber Defense & Scam Intelligence Platform
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/Anurag-tech22/DEV1/actions/workflows/ci.yml/badge.svg)](https://github.com/Anurag-tech22/DEV1/actions)
 [![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB.svg?logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React: 19](https://img.shields.io/badge/React-19.0-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Three.js](https://img.shields.io/badge/Three.js-R3F-black.svg?logo=three.js&logoColor=white)](https://threejs.org)
 [![Vite](https://img.shields.io/badge/Vite-6.0+-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com)
 
 **Kavach** (*"Shield"* in Sanskrit) is an enterprise-grade, multi-lingual fraud detection and cyber defense platform designed to neutralize social engineering attacks, digital arrest scams, phishing, and financial fraud across digital channels.
 
-[Features](#-key-features) • [Architecture](#-system-architecture) • [Workflow Diagrams](#-workflow-diagrams) • [Quickstart](#-quickstart--installation) • [API Reference](#-api-documentation) • [License](#-license)
+[Features](#-key-features) • [Architecture](#-system-architecture) • [Workflow Diagrams](#-workflow-diagrams) • [Quickstart](#-quickstart--installation) • [API Reference](#-api-documentation) • [Contributing](CONTRIBUTING.md) • [Code of Conduct](CODE_OF_CONDUCT.md) • [License](#-license)
 
 ---
 

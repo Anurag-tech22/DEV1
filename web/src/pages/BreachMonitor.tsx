@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ShieldAlert, CheckCircle2, Lock } from 'lucide-react';
 
-export default function BreachMonitor({ }: { t?: any }) {
+export default function BreachMonitor({ t: _t }: { t?: any }) {
   const [email, setEmail] = useState('');
   const [scanning, setScanning] = useState(false);
   const [breaches, setBreaches] = useState<any[] | null>(null);
