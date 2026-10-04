@@ -36,6 +36,7 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
     setLoading(true);
     setResult(null);
 
+    try {
       const res = await axios.post('/api/scan', { 
         text, 
         lang: language

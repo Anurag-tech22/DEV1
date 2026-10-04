@@ -1,6 +1,6 @@
 export const i18n = {
   en: {
-    appTitle: 'Kavach Shield',
+    appTitle: 'OmniGuard AI',
     navScanner: 'Check Message',
     navRadar: 'Live Alerts',
     navAudio: 'Call Protector',
