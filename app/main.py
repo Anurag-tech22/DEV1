@@ -70,6 +70,8 @@ app = FastAPI(title="Kavach Cyber Defense Platform")
 class ScanRequest(BaseModel):
     text: str = Field(..., max_length=4000, description="The text to analyze")
     lang: str = Field(default="en", max_length=10, description="The language of the text")
+    provider: Optional[str] = Field(default="google")
+    api_key: Optional[str] = Field(default="")
 
 class DrillRequest(BaseModel):
     scenario: str = Field(..., max_length=50)
@@ -178,7 +180,7 @@ async def api_scan(request: ScanRequest) -> ScanResponse:
         safe_text = request.text[:800]
         prompt = f"In 2 short, calm sentences in {lang_str}, explain why this message is a scam or dangerous: {safe_text}"
         
-        explanation = await ai_engine.generate_explanation(prompt, "auto")
+        explanation = await ai_engine.generate_explanation(prompt, request.provider or "auto", request.api_key or "")
         if explanation:
             response_data["explain"] = explanation
             response_data["llm"] = True

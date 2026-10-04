@@ -30,6 +30,8 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
   const [result, setResult] = useState<ScanResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [copiedDossier, setCopiedDossier] = useState(false);
+  const [aiProvider, setAiProvider] = useState<string>('google');
+  const [apiKey, setApiKey] = useState<string>('');
 
   const handleScan = async () => {
     if (!text.trim()) return;
@@ -39,7 +41,9 @@ export default function Scanner({ language, t }: { language: string, t: any }) {
     try {
       const res = await axios.post('/api/scan', { 
         text, 
-        lang: language
+        lang: language,
+        provider: aiProvider,
+        api_key: apiKey
       });
       setResult(res.data);
     } catch (err) {
@@ -123,11 +127,41 @@ Helpline: National Cyber Crime Helpline (1930)
       exit={{ opacity: 0, y: -20 }}
     >
       <div className="glass-card">
+        <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.5rem', color: '#94a3b8' }}>AI Engine Provider</label>
+            <select 
+              value={aiProvider}
+              onChange={(e) => setAiProvider(e.target.value)}
+              style={{ width: '100%', backgroundColor: '#000000', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '0.6rem', borderRadius: '8px', outline: 'none' }}
+            >
+              <option value="google">Google Gemini</option>
+              <option value="microsoft">Microsoft Azure OpenAI</option>
+              <option value="nvidia">NVIDIA NIM</option>
+              <option value="amazon">Amazon Bedrock</option>
+              <option value="apple">Apple Intelligence</option>
+              <option value="bytedance">ByteDance Doubao</option>
+              <option value="openai">OpenAI GPT-4</option>
+              <option value="anthropic">Anthropic Claude 3</option>
+            </select>
+          </div>
+          <div style={{ flex: 2, minWidth: '250px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.5rem', color: '#94a3b8' }}>Enterprise API Key (Optional BYOK)</label>
+            <input 
+              type="password"
+              placeholder="Enter your API key to override default rate limits..."
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              style={{ width: '100%', backgroundColor: '#000000', color: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.2)', padding: '0.6rem', borderRadius: '8px', outline: 'none' }}
+            />
+          </div>
+        </div>
+
         <textarea
           placeholder={t.scanPlaceholder}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          style={{ backgroundColor: '#000000', color: '#ffffff' }}
+          style={{ backgroundColor: '#000000', color: '#ffffff', minHeight: '150px' }}
         />
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', flexWrap: 'wrap' }}>
           <button className="btn btn-secondary" onClick={() => setText('')}>
