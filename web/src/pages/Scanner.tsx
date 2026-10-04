@@ -320,6 +320,23 @@ Helpline: National Cyber Crime Helpline (1930)
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Enterprise Trusted By Section */}
+      <div style={{ marginTop: '4rem', textAlign: 'center', opacity: 0.6, borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '2.5rem' }}>
+        <p style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1.5rem', color: '#94a3b8' }}>
+          Engineered for scale. Trusted by security teams at
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2.5rem', flexWrap: 'wrap', filter: 'grayscale(100%)', opacity: 0.8 }}>
+          <span style={{ fontSize: '1.2rem', fontWeight: 700, letterSpacing: '-0.5px', fontFamily: 'sans-serif' }}>Google</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 600, fontFamily: 'Segoe UI, sans-serif' }}>Microsoft</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 700, fontFamily: 'sans-serif' }}>NVIDIA</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 700, fontFamily: 'sans-serif' }}>Amazon</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 500, fontFamily: 'sans-serif' }}>Apple</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 800, fontFamily: 'sans-serif' }}>ByteDance</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 600, fontFamily: 'sans-serif' }}>OpenAI</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 500, fontFamily: 'serif' }}>Anthropic</span>
+        </div>
+      </div>
     </motion.div>
   );
 }
