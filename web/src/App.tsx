@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { ShieldCheck, Target, FileText, Radio, Volume2, Smartphone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
