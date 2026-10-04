@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: kavach-web
+    name: omniguard-web
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile

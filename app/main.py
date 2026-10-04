@@ -64,7 +64,7 @@ def get_db_connection() -> sqlite3.Connection:
     return conn
 
 # FastAPI Application
-app = FastAPI(title="Kavach Cyber Defense Platform")
+app = FastAPI(title="OmniGuard Cyber Defense Platform")
 
 # Pydantic Models
 class ScanRequest(BaseModel):
